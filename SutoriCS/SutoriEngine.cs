@@ -25,15 +25,33 @@ namespace SutoriProject.Sutori
         }
 
 
-        public async Task GotoMomentID(string momentID)
+        #region Non Async Equivalents
+
+        [Obsolete("Please use the await version instead.")] public void GotoMomentID(string momentID) => GotoMomentIDAsync(momentID).GetAwaiter().GetResult();
+        [Obsolete("Please use the await version instead.")] public void GotoMoment(SutoriMoment moment) => GotoMomentAsync(moment).GetAwaiter().GetResult();
+        [Obsolete("Please use the await version instead.")] public void Play() => PlayAsync().GetAwaiter().GetResult();
+        [Obsolete("Please use the await version instead.")] public void GotoNextMoment() => GotoNextMomentAsync().GetAwaiter().GetResult();
+
+        #endregion
+
+
+        /// <summary>
+        /// Goto a specific moment by id.
+        /// </summary>
+        /// <param name="momentID"></param>
+        public async Task GotoMomentIDAsync(string momentID)
         {
             SutoriMoment moment = Document.Moments.Find(t => t.ID == momentID);
             if (moment == null) throw new Exception("Could not find moment with id #{momentID}.");
-            await GotoMoment(moment);
+            await GotoMomentAsync(moment);
         }
 
 
-        public async Task GotoMoment(SutoriMoment moment)
+        /// <summary>
+        /// Goto a specific moment.
+        /// </summary>
+        /// <param name="moment"></param>
+        public async Task GotoMomentAsync(SutoriMoment moment)
         {
             if (moment == null) moment = Document.Moments.First();
             if (moment == null) throw new Exception("Document does not have any moments!");
@@ -45,7 +63,8 @@ namespace SutoriProject.Sutori
             {
                 if (loadElement.Loaded == false)
                 {
-                    await Document.LoadXmlParts(loadElement.Path, true);
+                    string incXML = await Document.UriLoader.LoadUriAsync(loadElement.Path);
+                    await Document.LoadXmlParts(incXML, loadElement.Path, true);
                     loadElement.Loaded = true;
                 }
             }
@@ -59,7 +78,7 @@ namespace SutoriProject.Sutori
         /// </summary>
         public async Task PlayAsync()
         {
-            await GotoMoment(null);
+            await GotoMomentAsync(null);
         }
 
 
@@ -68,7 +87,7 @@ namespace SutoriProject.Sutori
         /// the current moment has a goto option, which will be used instead if found.
         /// </summary>
         /// <returns>True if successful.</returns>
-        public async Task<bool> GotoNextMoment()
+        public async Task<bool> GotoNextMomentAsync()
         {
             if (Cursor == null) return false; // no cursor present.
             int index = Document.Moments.IndexOf(Cursor);
@@ -77,7 +96,7 @@ namespace SutoriProject.Sutori
             // if the moment has a goto, use that instead.
             if (!string.IsNullOrWhiteSpace(Cursor.Goto))
             {
-                await GotoMomentID(Cursor.Goto);
+                await GotoMomentIDAsync(Cursor.Goto);
                 return false;
             }
 
@@ -86,7 +105,7 @@ namespace SutoriProject.Sutori
                 Ended = true;
                 return false; // end of sequence.
             }
-            await GotoMoment(Document.Moments[index + 1]);
+            await GotoMomentAsync(Document.Moments[index + 1]);
             return true;
         }
     }

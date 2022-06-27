@@ -55,15 +55,18 @@ namespace SutoriProject.Sutori
         }
 
 
+        #region LoadFromXmlFile
+
+
         /// <summary>
         /// Load a SutoriDocument from an XML file located at a uri. The uri can be remote or local.
         /// </summary>
         /// <param name="uri">An either remote or local uri.</param>
         /// <param name="load_includes">Set to true if includes should be loaded when calling this method.</param>
         /// <returns>The loaded SutoriDocument instance.</returns>
-        public static async Task<SutoriDocument> LoadFromXml(string uri, bool load_includes = true)
+        public static SutoriDocument LoadFromXmlFile(string uri, bool load_includes = true)
         {
-            return await LoadFromXml(uri, SutoriUriLoader.Default, load_includes);
+            return LoadFromXmlFileAsync(uri, SutoriUriLoader.Default, load_includes).GetAwaiter().GetResult();
         }
 
 
@@ -74,13 +77,76 @@ namespace SutoriProject.Sutori
         /// <param name="loader"></param>
         /// <param name="load_includes">Set to true if includes should be loaded when calling this method.</param>
         /// <returns>The loaded SutoriDocument instance.</returns>
-        public static async Task<SutoriDocument> LoadFromXml(string uri, SutoriUriLoader loader, bool load_includes = true)
+        public static SutoriDocument LoadFromXmlFile(string uri, SutoriUriLoader loader, bool load_includes = true)
+        {
+            return LoadFromXmlFileAsync(uri, loader, load_includes).GetAwaiter().GetResult();
+        }
+
+
+
+        /// <summary>
+        /// Load a SutoriDocument from an XML file located at a uri. The uri can be remote or local.
+        /// </summary>
+        /// <param name="uri">An either remote or local uri.</param>
+        /// <param name="load_includes">Set to true if includes should be loaded when calling this method.</param>
+        /// <returns>The loaded SutoriDocument instance.</returns>
+        public static async Task<SutoriDocument> LoadFromXmlFileAsync(string uri, bool load_includes = true)
+        {
+            return await LoadFromXmlFileAsync(uri, SutoriUriLoader.Default, load_includes);
+        }
+
+
+        /// <summary>
+        /// Load a SutoriDocument from an XML file located at a uri. The uri can be remote or local.
+        /// </summary>
+        /// <param name="uri">An either remote or local uri.</param>
+        /// <param name="loader"></param>
+        /// <param name="load_includes">Set to true if includes should be loaded when calling this method.</param>
+        /// <returns>The loaded SutoriDocument instance.</returns>
+        public static async Task<SutoriDocument> LoadFromXmlFileAsync(string uri, SutoriUriLoader loader, bool load_includes = true)
         {
             SutoriDocument result = new SutoriDocument();
             result.UriLoader = loader;
-            await result.LoadXmlParts(uri, load_includes);
+            string xml = await result.UriLoader.LoadUriAsync(uri);
+            await result.LoadXmlParts(xml, uri, load_includes);
             return result;
         }
+
+
+        #endregion
+
+
+        #region LoadFromXml
+
+
+        public static SutoriDocument LoadFromXml(string xml, bool load_includes = false)
+        {
+            return LoadFromXml(xml, SutoriUriLoader.Default, load_includes);
+        }
+
+
+        public static SutoriDocument LoadFromXml(string xml, SutoriUriLoader loader, bool load_includes = false)
+        {
+            return LoadFromXmlAsync(xml, loader, load_includes).GetAwaiter().GetResult();
+        }
+
+
+        public static async Task<SutoriDocument> LoadFromXmlAsync(string xml)
+        {
+            return await LoadFromXmlAsync(xml, SutoriUriLoader.Default, false);
+        }
+
+
+        public static async Task<SutoriDocument> LoadFromXmlAsync(string xml, SutoriUriLoader loader, bool load_includes = false)
+        {
+            SutoriDocument result = new SutoriDocument();
+            result.UriLoader = loader;
+            await result.LoadXmlParts(xml, "source.xml", load_includes);
+            return result;
+        }
+
+
+        #endregion
 
 
         /// <summary>
@@ -88,9 +154,8 @@ namespace SutoriProject.Sutori
         /// </summary>
         /// <param name="uri">The URI location of the XML file to load.</param>
         /// <param name="load_includes">Weather or not to load the found includes.</param>
-        internal async Task LoadXmlParts(string uri, bool load_includes)
+        internal async Task LoadXmlParts(string xml, string uri, bool load_includes)
         {
-            string xml = await UriLoader.LoadUriAsync(uri);
             XDocument doc = XDocument.Parse(xml);
             XElement docElement = doc.Element("document");
 
@@ -115,7 +180,8 @@ namespace SutoriProject.Sutori
                 Includes.Add(include);
                 if (include.After == false && load_includes)
                 {
-                    await LoadXmlParts(include.Path, load_includes);
+                    string incXML = await UriLoader.LoadUriAsync(include.Path);
+                    await LoadXmlParts(incXML, include.Path, load_includes);
                     include.Loaded = true;
                 }
             }
@@ -158,7 +224,8 @@ namespace SutoriProject.Sutori
             {
                 if (include.After && load_includes)
                 {
-                    await LoadXmlParts(include.Path, load_includes);
+                    string incXML = await UriLoader.LoadUriAsync(include.Path);
+                    await LoadXmlParts(incXML, include.Path, load_includes);
                     include.Loaded = true;
                 }
             }

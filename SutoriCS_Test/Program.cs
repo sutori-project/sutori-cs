@@ -4,7 +4,7 @@
 Console.WriteLine("SutoriCS Test\n---------------------------");
 
 // load the document.
-SutoriDocument doc = await SutoriDocument.LoadFromXml("test1.xml");
+SutoriDocument doc = await SutoriDocument.LoadFromXmlFileAsync("test1.xml");
 
 // load the engine.
 SutoriEngine engine = new SutoriEngine(doc);
@@ -29,9 +29,9 @@ engine.HandleChallenge += async delegate(object? sender, SutoriEngineCallbackArg
     ConsoleKeyInfo key = Console.ReadKey(true);
     switch (key.Key)
     {
-        case ConsoleKey.D1: await engine.GotoMomentID(options[0].Target); break;
-        case ConsoleKey.D2: await engine.GotoMomentID(options[1].Target); break;
-        default: await engine.GotoNextMoment(); break;
+        case ConsoleKey.D1: await engine.GotoMomentIDAsync(options[0].Target); break;
+        case ConsoleKey.D2: await engine.GotoMomentIDAsync(options[1].Target); break;
+        default: await engine.GotoNextMomentAsync(); break;
     }
 };
 
