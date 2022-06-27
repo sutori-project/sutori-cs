@@ -116,9 +116,9 @@ engine.HandleChallenge += async delegate(object? sender, SutoriEngineCallbackArg
          await engine.GotoMomentIDAsync(options[1].Target);
          break;
       default:
-			await engine.GotoNextMomentAsync();
-			break;
-    }
+         await engine.GotoNextMomentAsync();
+         break;
+   }
 };
 
 // begin the game.
