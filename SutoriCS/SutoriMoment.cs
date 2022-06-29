@@ -31,9 +31,7 @@ namespace SutoriProject.Sutori
                 {
                     case "text": result.Elements.Add(SutoriElementText.Parse(childElement)); break;
                     case "option": result.Elements.Add(SutoriElementOption.Parse(childElement)); break;
-                    case "image": result.Elements.Add(SutoriElementImage.Parse(childElement)); break;
-                    case "audio": result.Elements.Add(SutoriElementAudio.Parse(childElement)); break;
-                    case "video": result.Elements.Add(SutoriElementVideo.Parse(childElement)); break;
+                    case "media": result.Elements.Add(SutoriElementMedia.Parse(childElement)); break;
                     case "load": result.Elements.Add(SutoriElementLoad.Parse(childElement)); break;
                     case "set": result.Elements.Add(SutoriElementSet.Parse(childElement)); break;
                     case "trigger": result.Elements.Add(SutoriElementTrigger.Parse(childElement)); break;
@@ -54,33 +52,13 @@ namespace SutoriProject.Sutori
         }
 
 
-        public SutoriElementImage AddImage(string resourceID, SutoriCulture culture = SutoriCulture.None)
+        public SutoriElementMedia AddMedia(string resourceID, SutoriCulture culture = SutoriCulture.None)
         {
-            SutoriElementImage image = new SutoriElementImage();
-            image.ResourceID = resourceID;
-            image.ContentCulture = culture;
-            Elements.Add(image);
-            return image;
-        }
-
-
-        public SutoriElementAudio AddAudio(string resourceID, SutoriCulture culture = SutoriCulture.None)
-        {
-            SutoriElementAudio audio = new SutoriElementAudio();
-            audio.ResourceID = resourceID;
-            audio.ContentCulture = culture;
-            Elements.Add(audio);
-            return audio;
-        }
-
-
-        public SutoriElementVideo AddVideo(string resourceID, SutoriCulture culture = SutoriCulture.None)
-        {
-            SutoriElementVideo video = new SutoriElementVideo();
-            video.ResourceID = resourceID;
-            video.ContentCulture = culture;
-            Elements.Add(video);
-            return video;
+            SutoriElementMedia media = new SutoriElementMedia();
+            media.ResourceID = resourceID;
+            media.ContentCulture = culture;
+            Elements.Add(media);
+            return media;
         }
 
 

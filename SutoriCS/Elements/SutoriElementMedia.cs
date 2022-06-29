@@ -2,17 +2,16 @@
 
 namespace SutoriProject.Sutori.Elements
 {
-    public sealed class SutoriElementVideo : SutoriElement
+    public sealed class SutoriElementMedia : SutoriElement
     {
-        public string Actor { get; set; } = null;
         public string For { get; set; } = null;
         public string ResourceID { get; set; } = null;
 
 
-        public static SutoriElementVideo Parse(XElement element)
+        public static SutoriElementMedia Parse(XElement element)
         {
-            SutoriElementVideo result = new SutoriElementVideo(); result.ContentCulture = element.AttributeAsCulture("lang");
-            result.Actor = element.AttributeAsString("actor");
+            SutoriElementMedia result = new SutoriElementMedia();
+            result.ContentCulture = element.AttributeAsCulture("lang");
             result.For = element.AttributeAsString("for");
             result.ResourceID = element.AttributeAsString("resource");
             result.ParseExtraAttributes(element, "lang", "actor", "for", "resource");

@@ -7,7 +7,7 @@
     <PackageId>SutoriProject.Sutori</PackageId>
     <Authors>kodaloid</Authors>
     <PackageProjectUrl>https://sutori.dev</PackageProjectUrl>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <AssemblyName>SutoriProject.Sutori</AssemblyName>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/sutori-project/sutori-cs</RepositoryUrl>
@@ -15,10 +15,15 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description>A simple to use .NET Standard 2.0 dialog system for websites, apps, games and more.</Description>
+    <PackageIcon>sutori-icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="sutori-icon.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

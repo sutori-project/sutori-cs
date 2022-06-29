@@ -39,14 +39,8 @@ namespace SutoriProject.Sutori
                         case "text":
                             result.Elements.Add(SutoriElementText.Parse(child));
                             break;
-                        case "image":
-                            result.Elements.Add(SutoriElementImage.Parse(child));
-                            break;
-                        case "audio":
-                            result.Elements.Add(SutoriElementAudio.Parse(child));
-                            break;
-                        case "video":
-                            result.Elements.Add(SutoriElementVideo.Parse(child));
+                        case "media":
+                            result.Elements.Add(SutoriElementMedia.Parse(child));
                             break;
                     }
                 }
